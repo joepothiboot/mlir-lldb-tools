@@ -32,7 +32,7 @@ def ensure_lldb():
     if lldb:
         return lldb
     exe = os.environ.get("LLDB", "lldb")
-    tried = []
+    tried, errors = [], []
     for path in _candidate_paths(exe):
         if not path or not os.path.isdir(os.path.join(path, "lldb")):
             continue
@@ -41,6 +41,7 @@ def ensure_lldb():
         lldb, err = _try_import()
         if lldb:
             return lldb
+        errors.append(f"    {path}: {err}")
         sys.path.remove(path)
     if not tried:
         raise LldbUnavailable(
@@ -53,4 +54,4 @@ def ensure_lldb():
         "LLDB's module is built against ONE CPython minor version. Either run\n"
         "with the matching python3, or recreate the venv with "
         "--system-site-packages.\n"
-        f"Underlying error: {err}")
+        "Errors:\n" + "\n".join(errors))
