@@ -18,9 +18,14 @@ jobs:
       options: --cap-add=SYS_PTRACE --security-opt seccomp=unconfined   # lldb must ptrace the demo
     steps:
       - uses: actions/checkout@v4
-      # Debian's python3-lldb-14 symlinks _lldb.so to liblldb.so, which only
-      # liblldb-14-dev provides; without it `import lldb` fails.
-      - run: apt-get update && apt-get install -y lldb python3-lldb liblldb-14-dev python3-pip cmake ninja-build
+      - run: apt-get update && apt-get install -y lldb python3-lldb python3-pip cmake ninja-build
+      # Debian's python3-lldb-14 ships _lldb.*.so -> ../../../../../lib/liblldb.so,
+      # which resolves to the nonexistent /usr/lib/lib/liblldb.so. Repoint it.
+      - name: Repair python3-lldb symlink
+        run: |
+          for so in /usr/lib/llvm-*/lib/python3*/dist-packages/lldb/_lldb.cpython-*.so; do
+            [ -e "$so" ] || ln -sfv "$(ls /usr/lib/*-linux-gnu/liblldb-*.so.1 | head -1)" "$so"
+          done
       - run: pip install -e .[dev] --break-system-packages
       - run: ./scripts/probe-toolchain.sh
       - name: Check LLDB's Python module imports
