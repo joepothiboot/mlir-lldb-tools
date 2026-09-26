@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "fixture": true,
+  "producer": {"tool": "hand-written fixture", "note": "mlir and llvm_ir layers are illustrative, not toolchain output"},
+  "modules": [
+    {
+      "source_file": "examples/audioframe.schema",
+      "generated_file": "fixtures/audioframe_validate.cpp",
+      "ops": [
+        {"op_id": "op_1", "op_name": "toy_schema.schema_ref", "results": ["%0"], "operands": [],
+         "attrs": {"name": "AudioFrame"},
+         "layers": {"source": {"file": "examples/audioframe.schema", "line": 1, "col": 1, "snippet": "schema AudioFrame {", "provenance": "real"},
+                    "native": {"generated_line": 5, "symbol": "AudioFrame_validate", "local_var": "__mlir_v0", "provenance": "real"}},
+         "pass_history": []},
+        {"op_id": "op_2", "op_name": "toy_schema.field_ref", "results": ["%1"], "operands": ["%0"],
+         "attrs": {"field_name": "name"},
+         "layers": {"source": {"file": "examples/audioframe.schema", "line": 2, "col": 3, "snippet": "name:    string(max = 64)", "provenance": "real"},
+                    "native": {"generated_line": 6, "symbol": "AudioFrame_validate", "local_var": "__mlir_v1", "provenance": "real"}},
+         "pass_history": []},
+        {"op_id": "op_3", "op_name": "toy_schema.validate_string", "results": ["%2"], "operands": ["%1"],
+         "attrs": {"max_len": 64},
+         "layers": {"source": {"file": "examples/audioframe.schema", "line": 2, "col": 3, "snippet": "name:    string(max = 64)", "provenance": "real"},
+                    "native": {"generated_line": 7, "symbol": "AudioFrame_validate", "local_var": "__mlir_v2", "provenance": "real"},
+                    "mlir": {"op_text": "%2 = \"toy_schema.validate_string\"(%1) {max_len = 64 : i64} : (!toy_schema.field) -> i1", "provenance": "synthetic"},
+                    "llvm_ir": {"snippet": "%3 = call i1 @schema_validate_string(ptr %2, i64 64, ptr %err)", "provenance": "synthetic"}},
+         "pass_history": []},
+        {"op_id": "op_4", "op_name": "toy_schema.field_ref", "results": ["%3"], "operands": ["%0"],
+         "attrs": {"field_name": "rate"},
+         "layers": {"source": {"file": "examples/audioframe.schema", "line": 3, "col": 3, "snippet": "rate:    i32(min = 8000, max = 192000)", "provenance": "real"},
+                    "native": {"generated_line": 9, "symbol": "AudioFrame_validate", "local_var": "__mlir_v3", "provenance": "real"}},
+         "pass_history": []},
+        {"op_id": "op_5", "op_name": "toy_schema.validate_range", "results": ["%4"], "operands": ["%3"],
+         "attrs": {"min": 8000, "max": 192000},
+         "layers": {"source": {"file": "examples/audioframe.schema", "line": 3, "col": 3, "snippet": "rate:    i32(min = 8000, max = 192000)", "provenance": "real"},
+                    "native": {"generated_line": 10, "symbol": "AudioFrame_validate", "local_var": "__mlir_v4", "provenance": "real"}},
+         "pass_history": []}
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ jobs:
     container: silkeh/clang:17     # PIN after probing; UNVERIFIED that this image ships lldb python
     steps:
       - uses: actions/checkout@v4
-      - run: apt-get update && apt-get install -y lldb python3-lldb cmake ninja-build
+      - run: apt-get update && apt-get install -y lldb python3-lldb python3-pip cmake ninja-build
       - run: pip install -e .[dev] --break-system-packages
       - run: ./scripts/probe-toolchain.sh
       - run: ./scripts/build.sh && pytest -m needs_lldb -v
