@@ -1,0 +1,6 @@
+schema AudioFrame {
+  name:    string(max = 64)
+  rate:    i32(min = 8000, max = 192000)
+  window:  tensor<f32, [16, 64]>
+  samples: dsp_buffer<f32, channels = 2, frames = 1024>
+}
