@@ -30,7 +30,11 @@ class Session:
         return self.launch()
 
     def launch(self):
-        self.process = self.target.LaunchSimple(None, None, os.getcwd())
+        info = lldb.SBLaunchInfo(None)
+        info.SetWorkingDirectory(os.getcwd())
+        err = lldb.SBError()
+        self.process = self.target.Launch(info, err)
+        assert err.Success(), f"launch failed: {err.GetCString()}"
         assert self.process.GetState() == lldb.eStateStopped, self.cmd("process status")
         return self.process
 

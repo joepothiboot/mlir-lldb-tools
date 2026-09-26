@@ -28,6 +28,8 @@ jobs:
           done
       - run: pip install -e .[dev] --break-system-packages
       - run: ./scripts/probe-toolchain.sh
+      - name: Point liblldb at lldb-server
+        run: echo "LLDB_DEBUGSERVER_PATH=$(ls /usr/lib/llvm-*/bin/lldb-server | head -1)" >> "$GITHUB_ENV"
       - name: Check LLDB's Python module imports
         run: python3 -c 'import mlir_lldb_tools._bootstrap as b; print("lldb OK:", b.ensure_lldb().__file__)'
       - run: ./scripts/build.sh && pytest -m needs_lldb -v
