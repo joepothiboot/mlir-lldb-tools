@@ -1,5 +1,17 @@
-class MlirShowLoc:
+import shlex
+from types import SimpleNamespace
+from . import Command
+from ..state import SESSION
+from ..metadata import MetadataError
+
+class MlirShowLoc(Command):
     """Print defining op, source location and live runtime value for %id."""
+    def _parse(self, command, result):
+        argv = shlex.split(command)
+        if len(argv) != 1:
+            result.SetError("usage: mlir-show-loc <value-id>"); return None
+        return SimpleNamespace(value_id=argv[0])
+
     def __call__(self, debugger, command, exe_ctx, result):
         args = self._parse(command, result)
         if args is None: return

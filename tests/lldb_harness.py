@@ -9,12 +9,14 @@ try:
 except LldbUnavailable as e:
     lldb, HAVE_LLDB, REASON = None, False, str(e)
 
-needs_lldb = pytest.mark.skipif(not HAVE_LLDB, reason=REASON)
+def needs_lldb(fn):
+    """Mark for `-m needs_lldb` selection, and skip when lldb can't be imported."""
+    return pytest.mark.needs_lldb(pytest.mark.skipif(not HAVE_LLDB, reason=REASON)(fn))
 
 class Session:
     def __init__(self, binary=BINARY):
         self.dbg = lldb.SBDebugger.Create(); self.dbg.SetAsync(False)
-        self.dbg.HandleCommand("command script import src.mlir_lldb_tools")
+        self.dbg.HandleCommand("command script import mlir_lldb_tools")
         self.target = self.dbg.CreateTarget(binary); self.process = None
 
     def cmd(self, text):
@@ -25,8 +27,15 @@ class Session:
     def break_at_name(self, name):
         bp = self.target.BreakpointCreateByName(name)
         assert bp.GetNumLocations() > 0
+        return self.launch()
+
+    def launch(self):
         self.process = self.target.LaunchSimple(None, None, os.getcwd())
+        assert self.process.GetState() == lldb.eStateStopped, self.cmd("process status")
         return self.process
+
+    def frame(self):
+        return self.process.GetSelectedThread().GetSelectedFrame()
 
     def close(self):
         if self.process: self.process.Kill()

@@ -1,7 +1,8 @@
 import shlex, lldb
+from . import Command
 from ..printers import tensor, dsp, schema as schema_pp
 
-class _Inspect:
+class _Inspect(Command):
     TYPE = None
     RENDER = None
     def __call__(self, debugger, command, exe_ctx, result):

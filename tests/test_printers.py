@@ -4,6 +4,7 @@ from lldb_harness import session, needs_lldb
 @needs_lldb
 def test_tensor_valid(session):
     session.break_at_name("mlir_debug_checkpoint")
+    session.cmd("frame select 1")                 # `win` lives in main()
     out = session.cmd("frame variable win")
     assert "TensorView<f32>" in out
     assert "shape: [16, 64]" in out

@@ -9,3 +9,5 @@ build/
 *.egg-info/
 dist/
 node_modules/
+docs/environment.md
+docs/transcripts/

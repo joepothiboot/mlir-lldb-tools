@@ -1,8 +1,9 @@
 import shlex, os
+from . import Command
 from ..state import SESSION
 from ..metadata import MetadataError
 
-class MlirSource:
+class MlirSource(Command):
     def __call__(self, debugger, command, exe_ctx, result):
         argv = shlex.split(command)
         if not argv:

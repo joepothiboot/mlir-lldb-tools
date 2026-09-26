@@ -32,6 +32,8 @@ def lower_module(ast_mod):
             t = f.type_ref
             if t.name == "tensor":
                 b.create("toy_schema.tensor_alloc", [], {"shape": t.shape, "dtype": t.dtype}, t.prov)
+            elif t.name == "dsp_buffer":
+                b.create("toy_schema.dsp_alloc", [], {"frames": t.params.get("frames", 1024), "channels": t.params.get("channels", 1), "sample_rate": t.params.get("rate", 48000)}, t.prov)
             elif t.name == "string":
                 b.create("toy_schema.validate_string", ref.results, {"max_len": f.constraints["max"]}, f.prov)
             elif t.name in ("i32", "i64"):

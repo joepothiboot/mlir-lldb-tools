@@ -9,7 +9,7 @@ class LldbAdapter:
     def __init__(self):
         self.dbg = lldb.SBDebugger.Create()
         self.dbg.SetAsync(False)
-        self.dbg.HandleCommand("command script import src.mlir_lldb_tools")
+        self.dbg.HandleCommand("command script import mlir_lldb_tools")
         self.target = None; self.process = None
         self._refs = {}; self._next = 1000
 

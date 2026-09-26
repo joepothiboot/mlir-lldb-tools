@@ -1,8 +1,9 @@
 import shlex
+from . import Command
 from ..state import SESSION
 from ..metadata import MetadataError
 
-class MlirBreakField:
+class MlirBreakField(Command):
     def get_short_help(self): return "Break on validation of a schema field."
     def get_long_help(self):
         return ("usage: mlir-break-field <Schema>.<field>\n\n"

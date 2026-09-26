@@ -62,8 +62,17 @@ pip install -e .[dev]
 pytest -m "not needs_lldb and not needs_mlir"
 ```
 
-With an MLIR dev install, `scripts/build.sh` sketches the full pipeline
-(`.schema` → MLIR → `schemac-opt` → LLVM IR → C++ + metadata).
+To build the demo and run the debugger tests (needs clang++ and lldb):
+
+```bash
+./scripts/build.sh                # schemac -> build/generated/*.cpp + build/metadata.json -> build/schema_demo
+pytest -m needs_lldb
+./scripts/demo_stage1.sh          # scripted LLDB session
+```
+
+The MLIR stages (`schemac-opt`, LLVM IR) are not wired into the build yet, and
+the C++ under `mlir/` has not been compiled. Until then, metadata has no
+`mlir`/`llvm_ir` layers, and `mlir-show-ir` says so.
 
 **Common snag:** LLDB's Python module is built against one CPython minor
 version. `_bootstrap.py` reports both versions if they don't match. Use the

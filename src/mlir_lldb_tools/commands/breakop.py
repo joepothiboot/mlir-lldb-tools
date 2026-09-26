@@ -1,8 +1,9 @@
 import argparse, shlex, lldb
+from . import Command
 from ..state import SESSION
 from ..metadata import MetadataError
 
-class MlirBreakOp:
+class MlirBreakOp(Command):
     """Set a breakpoint at the native code generated for a named MLIR op."""
     @staticmethod
     def parser():

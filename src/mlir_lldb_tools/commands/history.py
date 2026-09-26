@@ -1,8 +1,9 @@
 import shlex
+from . import Command
 from ..state import SESSION
 from ..metadata import MetadataError
 
-class MlirPassHistory:
+class MlirPassHistory(Command):
     def __call__(self, debugger, command, exe_ctx, result):
         argv = shlex.split(command)
         if len(argv) != 1:

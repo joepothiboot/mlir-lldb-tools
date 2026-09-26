@@ -1,5 +1,6 @@
 _COMMANDS = [
     ("mlir-break-op", "commands.breakop.MlirBreakOp"),
+    ("mlir-break-field",   "commands.breakfield.MlirBreakField"),
     ("mlir-show-loc", "commands.showloc.MlirShowLoc"),
     ("schema-inspect", "commands.inspect.SchemaInspect"),
     ("dsp-inspect", "commands.inspect.DspInspect"),
@@ -14,7 +15,10 @@ def __lldb_init_module(debugger, internal_dict):
     from ._bootstrap import ensure_lldb
 
     ensure_lldb()
+    import importlib
     for name, cls in _COMMANDS:
+        # LLDB resolves the class by dotted name, so its module must be imported.
+        importlib.import_module(f"{__name__}.{cls.rsplit('.', 1)[0]}")
         debugger.HandleCommand(f"command script add -o -c mlir_lldb_tools.{cls} {name}")
     from .printers import register_all
 

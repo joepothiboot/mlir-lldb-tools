@@ -16,6 +16,7 @@ class Op:
     layers: Dict[str, dict]
     pass_history: List[dict]
     module: "Module" = None
+    attrs: Dict[str, object] = field(default_factory=dict)
 
     def layer(self, name) -> Optional[dict]:
         return self.layers.get(name)
@@ -35,6 +36,7 @@ class Metadata:
     path: str
     producer: dict
     modules: List[Module]
+    fixture: bool = False
     _by_value: Dict[str, Op] = field(default_factory=dict)
     _by_opname: Dict[str, List[Op]] = field(default_factory=dict)
 
@@ -53,19 +55,31 @@ class Metadata:
             raise MetadataError(
                 f"metadata schema_version={v!r}, this build understands "
                 f"{SCHEMA_VERSION}. Regenerate with a matching schemac.")
-        md = cls(path=path, producer=raw.get("producer", {}), modules=[])
+        md = cls(path=path, producer=raw.get("producer", {}), modules=[],
+                 fixture=bool(raw.get("fixture", False)))
         for m in raw.get("modules", []):
             mod = Module(m["source_file"], m["generated_file"])
             for o in m.get("ops", []):
                 op = Op(o["op_id"], o["op_name"], o.get("results", []),
                         o.get("operands", []), o.get("layers", {}),
-                        o.get("pass_history", []), mod)
+                        o.get("pass_history", []), mod, o.get("attrs", {}))
                 mod.ops.append(op)
                 for r in op.results:
                     md._by_value[r] = op
                 md._by_opname.setdefault(op.op_name, []).append(op)
             md.modules.append(mod)
         return md
+
+    def banner(self) -> Optional[str]:
+        """Warning to print when any of this metadata is not real build output."""
+        if self.fixture:
+            return "[fixture] hand-written metadata, not produced by a build"
+        synthetic = sorted({name for m in self.modules for o in m.ops
+                            for name, l in o.layers.items()
+                            if (l or {}).get("provenance", "real") != "real"})
+        if synthetic:
+            return f"[synthetic] layers not produced by a real toolchain: {', '.join(synthetic)}"
+        return None
 
     # --- lookups with *useful* failures: a debugger tool must fail legibly ---
     def op_for_value(self, vid: str) -> Op:

@@ -1,8 +1,9 @@
 import argparse, hashlib, os, shlex
+from . import Command
 from ..state import SESSION
 from ..metadata import Metadata, MetadataError
 
-class MlirAdmin:
+class MlirAdmin(Command):
     def __call__(self, debugger, command, exe_ctx, result):
         argv = shlex.split(command)
         if not argv: return

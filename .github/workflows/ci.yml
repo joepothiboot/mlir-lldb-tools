@@ -13,7 +13,9 @@ jobs:
   lldb-docker:             # hosted runners have no importable lldb module
     runs-on: ubuntu-latest
     continue-on-error: true        # honestly reported as partial, never silently skipped
-    container: silkeh/clang:17     # PIN after probing; UNVERIFIED that this image ships lldb python
+    container:
+      image: silkeh/clang:17
+      options: --cap-add=SYS_PTRACE --security-opt seccomp=unconfined   # lldb must ptrace the demo
     steps:
       - uses: actions/checkout@v4
       - run: apt-get update && apt-get install -y lldb python3-lldb python3-pip cmake ninja-build

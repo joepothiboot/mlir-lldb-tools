@@ -12,7 +12,9 @@ class Parser:
     def at(self, kind, text=None): return self.cur.kind == kind and (text is None or self.cur.text == text)
 
     def eat(self, kind, text=None):
-        if not self.at(kind, text): raise SyntaxError(f"Expected {text or kind}")
+        if not self.at(kind, text):
+            c = self.cur
+            raise SyntaxError(f"{self.file}:{c.line}:{c.col}: expected {text or kind}, got {c.text!r}")
         t = self.cur; self.i += 1; return t
 
     def prov(self, tok):
@@ -50,6 +52,14 @@ class Parser:
             while self.at("punct", ","): self.eat("punct", ","); shape.append(int(self.eat("int").text))
             self.eat("punct", "]"); self.eat("punct", ">")
             tr = TypeRef(prov=prov, name="tensor", dtype=dtype, shape=shape)
+        elif self.at("kw", "dsp_buffer"):
+            self.eat("kw", "dsp_buffer"); self.eat("punct", "<")
+            dtype = self.eat("kw").text; params = {}
+            while self.at("punct", ","):
+                self.eat("punct", ","); k = self.eat("ident").text
+                self.eat("punct", "="); params[k] = int(self.eat("int").text)
+            self.eat("punct", ">")
+            tr = TypeRef(prov=prov, name="dsp_buffer", dtype=dtype, params=params)
         else:
             base = self.eat("kw").text; params = {}
             if self.at("punct", "("):
