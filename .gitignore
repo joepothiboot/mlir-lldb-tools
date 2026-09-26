@@ -5,3 +5,7 @@ build/
 .vscode/*
 !.vscode/launch.json
 .DS_Store
+.venv/
+*.egg-info/
+dist/
+node_modules/
