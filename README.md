@@ -4,9 +4,10 @@ LLDB tooling for a small MLIR-based toy compiler: commands that speak in ops and
 SSA values, pretty-printers for the runtime's objects, and a minimal debug
 adapter (DAP) for VS Code.
 
-> **Status: early skeleton.** Most files are partial stubs. Nothing has been
-> built or run end to end yet, and version-sensitive spots (especially MLIR's
-> C++ API) are marked `UNVERIFIED`.
+> **Status: early.** The no-MLIR path works end to end and is tested in CI:
+> `.schema` → schemac → generated C++ + metadata → clang → LLDB commands and
+> printers on a live process. The MLIR dialect under `mlir/` has not been
+> compiled yet, and its version-sensitive spots are marked `UNVERIFIED`.
 
 ## The idea
 
