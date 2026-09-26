@@ -1,21 +1,21 @@
 name: ci
 on: [push, pull_request]
 jobs:
-  toolchain-free:          # always runs: parser, passes, metadata schema
+  toolchain-free: # always runs: parser, passes, metadata schema
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: { python-version: "3.11" }
       - run: pip install -e .[dev]
       - run: pytest -m "not needs_lldb and not needs_mlir" -v
 
-  lldb-docker:             # hosted runners have no importable lldb module
+  lldb-docker: # hosted runners have no importable lldb module
     runs-on: ubuntu-latest
-    continue-on-error: true        # honestly reported as partial, never silently skipped
+    continue-on-error: true # honestly reported as partial, never silently skipped
     container:
       image: silkeh/clang:17
-      options: --cap-add=SYS_PTRACE --security-opt seccomp=unconfined   # lldb must ptrace the demo
+      options: --cap-add=SYS_PTRACE --security-opt seccomp=unconfined # lldb must ptrace the demo
     steps:
       - uses: actions/checkout@v4
       - run: apt-get update && apt-get install -y lldb python3-lldb python3-pip cmake ninja-build

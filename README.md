@@ -39,16 +39,16 @@ vscode-ext/            tiny extension showing the current value's MLIR op
 
 Registered by `command script import src/mlir_lldb_tools`:
 
-| Command | Purpose |
-|---|---|
-| `mlir-break-op <op-name>` | Break at code generated for a named op |
-| `mlir-break-field <Schema>.<field>` | Break on validation of a source-level field |
-| `mlir-show-loc <%id>` | Defining op, source location, live value |
-| `mlir-pass-history <%id>` | Passes that touched a value |
-| `mlir-show-ir <%id>` | MLIR / LLVM IR for a value's op |
-| `mlir-source <%id>` | Show the originating `.schema` lines |
-| `schema-inspect` / `dsp-inspect <expr>` | Pretty-print on demand |
-| `mlir-lldb-tools load-metadata\|verbose-print\|status` | Session admin |
+| Command                                                | Purpose                                     |
+| ------------------------------------------------------ | ------------------------------------------- |
+| `mlir-break-op <op-name>`                              | Break at code generated for a named op      |
+| `mlir-break-field <Schema>.<field>`                    | Break on validation of a source-level field |
+| `mlir-show-loc <%id>`                                  | Defining op, source location, live value    |
+| `mlir-pass-history <%id>`                              | Passes that touched a value                 |
+| `mlir-show-ir <%id>`                                   | MLIR / LLVM IR for a value's op             |
+| `mlir-source <%id>`                                    | Show the originating `.schema` lines        |
+| `schema-inspect` / `dsp-inspect <expr>`                | Pretty-print on demand                      |
+| `mlir-lldb-tools load-metadata\|verbose-print\|status` | Session admin                               |
 
 Printers are registered for `TensorView`, `DspBuffer`, `SchemaObject`,
 `RuntimeError` and `MlirValue`. Fields are read from memory via DWARF, and
