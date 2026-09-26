@@ -21,4 +21,10 @@ jobs:
       - run: apt-get update && apt-get install -y lldb python3-lldb python3-pip cmake ninja-build
       - run: pip install -e .[dev] --break-system-packages
       - run: ./scripts/probe-toolchain.sh
+      - name: Show where LLDB's Python module is
+        run: |
+          lldb -P || true
+          ls -l /usr/lib/python3/dist-packages/lldb 2>&1 | head || true
+          ls -d /usr/lib/llvm-*/lib/python3*/*-packages 2>&1 || true
+          python3 -c 'import mlir_lldb_tools._bootstrap as b; print("lldb OK:", b.ensure_lldb().__file__)'
       - run: ./scripts/build.sh && pytest -m needs_lldb -v
