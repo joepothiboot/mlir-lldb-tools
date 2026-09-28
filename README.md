@@ -1,15 +1,15 @@
-# mlir-lldb-tools
+# mlir-lldb-tools 🐞
 
 LLDB tooling for a small MLIR-based toy compiler: commands that speak in ops and
 SSA values, pretty-printers for the runtime's objects, and a minimal debug
 adapter (DAP) for VS Code.
 
-> **Status: early.** The no-MLIR path works end to end and is tested in CI:
+> 🚧 **Status: early.** The no-MLIR path works end to end and is tested in CI:
 > `.schema` → schemac → generated C++ + metadata → clang → LLDB commands and
 > printers on a live process. The MLIR dialect under `mlir/` has not been
 > compiled yet, and its version-sensitive spots are marked `UNVERIFIED`.
 
-## The idea
+## 💡 The idea
 
 A debugger sees memory; a compiler sees SSA values. This project joins them:
 
@@ -22,7 +22,7 @@ A debugger sees memory; a compiler sees SSA values. This project joins them:
 Each metadata layer carries a `provenance` field (`real` or `synthetic`), and
 `mlir-show-ir` prints a banner for anything that isn't real.
 
-## Layout
+## 🗂️ Layout
 
 ```
 src/mlir_lldb_tools/   LLDB commands, pretty-printers, DAP server
@@ -36,7 +36,7 @@ tests/                 pytest; markers split by required toolchain
 vscode-ext/            tiny extension showing the current value's MLIR op
 ```
 
-## LLDB commands
+## ⌨️ LLDB commands
 
 Registered by `command script import src/mlir_lldb_tools`:
 
@@ -55,7 +55,7 @@ Printers are registered for `TensorView`, `DspBuffer`, `SchemaObject`,
 `RuntimeError` and `MlirValue`. Fields are read from memory via DWARF, and
 malformed objects (bad `magic`) degrade to a readable message instead of throwing.
 
-## Getting started
+## 🚀 Getting started
 
 ```bash
 ./scripts/probe-toolchain.sh      # records your lldb/clang/MLIR versions in docs/environment.md
@@ -75,11 +75,11 @@ The MLIR stages (`schemac-opt`, LLVM IR) are not wired into the build yet, and
 the C++ under `mlir/` has not been compiled. Until then, metadata has no
 `mlir`/`llvm_ir` layers, and `mlir-show-ir` says so.
 
-**Common snag:** LLDB's Python module is built against one CPython minor
+⚠️ **Common snag:** LLDB's Python module is built against one CPython minor
 version. `_bootstrap.py` reports both versions if they don't match. Use the
 matching interpreter or `python -m venv --system-site-packages`.
 
-## Known limitations
+## 🚧 Known limitations
 
 - Side-car metadata goes stale on rebuild. DWARF would be the proper home.
 - Optimised builds: locals get optimised out; no location-list handling.
@@ -87,6 +87,6 @@ matching interpreter or `python -m venv --system-site-packages`.
 - DAP server is deliberately narrow: no attach, `setVariable`, conditional
   breakpoints or watch expressions.
 
-## License
+## 📜 License
 
 MIT. See `LICENSE`.
