@@ -4,6 +4,12 @@ LLDB tooling for a small MLIR-based toy compiler: commands that speak in ops and
 SSA values, pretty-printers for the runtime's objects, and a minimal debug
 adapter (DAP) for VS Code.
 
+> 📦 **Archived.** This project is no longer developed. It is kept as a read-only
+> reference; the MLIR work continues in
+> [json-schema-mlir](https://github.com/joepothiboot/json-schema-mlir),
+> [nano-dsp-mlir](https://github.com/joepothiboot/nano-dsp-mlir) and
+> [vizmlir](https://github.com/joepothiboot/vizmlir).
+
 > 🚧 **Status: early.** The no-MLIR path works end to end and is tested in CI:
 > `.schema` → schemac → generated C++ + metadata → clang → LLDB commands and
 > printers on a live process. The MLIR dialect under `mlir/` has not been
